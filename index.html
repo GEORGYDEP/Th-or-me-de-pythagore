@@ -1,58 +1,2214 @@
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>L'Art de la Comptabilité</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Great+Vibes&family=Italiana&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
-  <style>
-    body {
-      background-color: #f4e4bc;
-      background-image: url("https://www.transparenttextures.com/patterns/parchment.png");
-      font-family: 'Playfair Display', serif;
-    }
-    .renaissance-font {
-      font-family: 'Cinzel', serif;
-    }
-    .cursive-font {
-      font-family: 'Great+Vibes', cursive;
-    }
-    .italiana-font {
-      font-family: 'Italiana', serif;
-    }
-    /* Custom Scrollbar for parchment look */
-    ::-webkit-scrollbar {
-      width: 10px;
-    }
-    ::-webkit-scrollbar-track {
-      background: #e4d4ac;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: #8b5e3c;
-      border-radius: 5px;
-    }
-    .ink-text {
-      color: #1a2a3a;
-    }
-    .gold-border {
-      border: 4px double #b8860b;
-    }
-  </style>
-<script type="importmap">
-{
-  "imports": {
-    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
-    "react/": "https://esm.sh/react@^19.2.3/",
-    "react": "https://esm.sh/react@^19.2.3"
-  }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Le Temple de Pythagore — Jeu Éducatif</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --gold: #d4a03c;
+  --gold-light: #f0d078;
+  --gold-dim: #8a6a20;
+  --bg-deep: #0a0a12;
+  --bg-panel: #12121e;
+  --bg-card: #1a1a2e;
+  --accent-blue: #4fc3f7;
+  --accent-cyan: #00e5ff;
+  --accent-green: #69f0ae;
+  --accent-red: #ff5252;
+  --accent-purple: #b388ff;
+  --text: #e8e6e3;
+  --text-dim: #8a8a9a;
+  --text-bright: #ffffff;
+  --glow-gold: 0 0 30px rgba(212,160,60,0.3);
+  --glow-cyan: 0 0 30px rgba(0,229,255,0.3);
 }
-</script>
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background: var(--bg-deep);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* === BACKGROUND EFFECTS === */
+.bg-pattern {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 20% 0%, rgba(212,160,60,0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 100%, rgba(0,229,255,0.04) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 50%, rgba(30,30,60,0.5) 0%, transparent 70%);
+}
+
+.bg-grid {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.03;
+  background-image:
+    linear-gradient(var(--gold) 1px, transparent 1px),
+    linear-gradient(90deg, var(--gold) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+.floating-symbols {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.floating-symbols span {
+  position: absolute;
+  font-family: 'Cinzel Decorative', serif;
+  color: var(--gold);
+  opacity: 0.04;
+  animation: floatSymbol 20s infinite linear;
+}
+
+@keyframes floatSymbol {
+  0% { transform: translateY(100vh) rotate(0deg); }
+  100% { transform: translateY(-100px) rotate(360deg); }
+}
+
+/* === LAYOUT === */
+.app {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+}
+
+/* === HEADER === */
+.game-header {
+  padding: 1.5rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(212,160,60,0.15);
+  background: rgba(10,10,18,0.8);
+  backdrop-filter: blur(20px);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.logo-icon {
+  width: 44px;
+  height: 44px;
+  position: relative;
+}
+
+.logo-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.logo-text h1 {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--gold);
+  letter-spacing: 0.05em;
+  line-height: 1.2;
+}
+
+.logo-text span {
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.header-stats {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.stat-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 1rem;
+  background: rgba(212,160,60,0.08);
+  border: 1px solid rgba(212,160,60,0.2);
+  border-radius: 100px;
+  font-size: 0.85rem;
+  color: var(--gold-light);
+}
+
+.stat-badge .icon {
+  font-size: 1rem;
+}
+
+.stat-badge .value {
+  font-weight: 600;
+}
+
+/* === SCREENS === */
+.screen {
+  display: none;
+  animation: fadeIn 0.6s ease;
+}
+
+.screen.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* === WELCOME SCREEN === */
+.welcome {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 80px);
+  padding: 2rem;
+  text-align: center;
+}
+
+.welcome-temple {
+  position: relative;
+  width: 280px;
+  height: 280px;
+  margin-bottom: 2rem;
+}
+
+.temple-glow {
+  position: absolute;
+  inset: -30px;
+  background: radial-gradient(circle, rgba(212,160,60,0.15) 0%, transparent 70%);
+  animation: pulseGlow 3s ease-in-out infinite;
+}
+
+@keyframes pulseGlow {
+  0%,100% { transform: scale(1); opacity: 0.5; }
+  50% { transform: scale(1.1); opacity: 1; }
+}
+
+.temple-svg {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+}
+
+.welcome h2 {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  font-weight: 900;
+  color: var(--gold);
+  margin-bottom: 0.5rem;
+  text-shadow: 0 0 40px rgba(212,160,60,0.3);
+}
+
+.welcome .subtitle {
+  font-family: 'Cinzel', serif;
+  font-size: 1.1rem;
+  color: var(--text-dim);
+  margin-bottom: 2rem;
+  letter-spacing: 0.15em;
+}
+
+.welcome .description {
+  max-width: 600px;
+  line-height: 1.8;
+  color: var(--text);
+  margin-bottom: 3rem;
+  font-size: 1.05rem;
+}
+
+.btn-primary {
+  font-family: 'Cinzel', serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  padding: 1rem 3rem;
+  background: linear-gradient(135deg, var(--gold), var(--gold-dim));
+  color: var(--bg-deep);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  box-shadow: var(--glow-gold);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 50px rgba(212,160,60,0.5);
+}
+
+.btn-primary::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transform: translateX(-100%);
+  transition: transform 0.5s;
+}
+
+.btn-primary:hover::after {
+  transform: translateX(100%);
+}
+
+.btn-secondary {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 500;
+  padding: 0.8rem 2rem;
+  background: transparent;
+  color: var(--gold-light);
+  border: 1px solid rgba(212,160,60,0.3);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+  background: rgba(212,160,60,0.1);
+  border-color: var(--gold);
+}
+
+/* === CHAPTER SELECT === */
+.chapter-select {
+  padding: 3rem 2rem;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.section-title {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 1.8rem;
+  color: var(--gold);
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+.section-subtitle {
+  text-align: center;
+  color: var(--text-dim);
+  margin-bottom: 3rem;
+  font-size: 0.95rem;
+}
+
+.chapters-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.chapter-card {
+  background: var(--bg-card);
+  border: 1px solid rgba(212,160,60,0.12);
+  border-radius: 16px;
+  padding: 2rem;
+  cursor: pointer;
+  transition: all 0.4s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.chapter-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.chapter-card:hover::before { opacity: 1; }
+
+.chapter-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(212,160,60,0.3);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+}
+
+.chapter-card.locked {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.chapter-card.locked:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+.chapter-card.completed {
+  border-color: rgba(105,240,174,0.3);
+}
+
+.chapter-number {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 3rem;
+  font-weight: 900;
+  color: rgba(212,160,60,0.15);
+  line-height: 1;
+  margin-bottom: 1rem;
+}
+
+.chapter-card.completed .chapter-number {
+  color: rgba(105,240,174,0.15);
+}
+
+.chapter-card h3 {
+  font-family: 'Cinzel', serif;
+  font-size: 1.15rem;
+  color: var(--gold-light);
+  margin-bottom: 0.5rem;
+}
+
+.chapter-card.completed h3 {
+  color: var(--accent-green);
+}
+
+.chapter-card p {
+  font-size: 0.9rem;
+  color: var(--text-dim);
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.chapter-status {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  color: var(--text-dim);
+}
+
+.chapter-status .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--text-dim);
+}
+
+.chapter-card.completed .chapter-status .dot {
+  background: var(--accent-green);
+  box-shadow: 0 0 10px rgba(105,240,174,0.5);
+}
+
+/* === GAME AREA === */
+.game-area {
+  padding: 2rem;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.game-area .back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text-dim);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.9rem;
+  margin-bottom: 2rem;
+  transition: color 0.3s;
+}
+
+.game-area .back-btn:hover { color: var(--gold-light); }
+
+/* === DISCOVERY PHASE === */
+.discovery-container {
+  background: var(--bg-panel);
+  border: 1px solid rgba(212,160,60,0.12);
+  border-radius: 20px;
+  padding: 2.5rem;
+  margin-bottom: 2rem;
+}
+
+.discovery-container h3 {
+  font-family: 'Cinzel', serif;
+  font-size: 1.4rem;
+  color: var(--gold);
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.discovery-visual {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+}
+
+.triangle-canvas {
+  position: relative;
+  width: 100%;
+  max-width: 550px;
+  aspect-ratio: 1.3;
+}
+
+.triangle-canvas canvas {
+  width: 100%;
+  height: 100%;
+  border-radius: 12px;
+}
+
+.slider-group {
+  width: 100%;
+  max-width: 450px;
+}
+
+.slider-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.slider-row label {
+  font-weight: 600;
+  min-width: 20px;
+  color: var(--accent-cyan);
+  font-size: 1.1rem;
+}
+
+.slider-row input[type="range"] {
+  flex: 1;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 6px;
+  background: rgba(212,160,60,0.2);
+  border-radius: 3px;
+  outline: none;
+}
+
+.slider-row input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--gold);
+  cursor: pointer;
+  box-shadow: var(--glow-gold);
+}
+
+.slider-row .val {
+  min-width: 35px;
+  text-align: right;
+  font-weight: 600;
+  color: var(--text-bright);
+}
+
+.area-equation {
+  text-align: center;
+  padding: 1.5rem;
+  background: rgba(212,160,60,0.05);
+  border: 1px solid rgba(212,160,60,0.15);
+  border-radius: 12px;
+  margin-top: 1rem;
+}
+
+.area-equation .eq-line {
+  font-size: 1.15rem;
+  margin: 0.4rem 0;
+  font-weight: 500;
+}
+
+.area-equation .eq-line .colored-a { color: #ff7043; }
+.area-equation .eq-line .colored-b { color: #42a5f5; }
+.area-equation .eq-line .colored-c { color: #ab47bc; }
+.area-equation .eq-result {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--accent-green);
+  margin-top: 0.5rem;
+}
+
+.area-equation .eq-check {
+  margin-top: 0.3rem;
+  font-size: 0.9rem;
+}
+
+.discovery-narrative {
+  max-width: 650px;
+  margin: 2rem auto 0;
+  text-align: center;
+}
+
+.narrative-step {
+  display: none;
+  animation: fadeIn 0.5s ease;
+}
+
+.narrative-step.visible { display: block; }
+
+.narrative-step p {
+  line-height: 1.8;
+  font-size: 1rem;
+  color: var(--text);
+  margin-bottom: 1rem;
+}
+
+.narrative-step .highlight-box {
+  background: rgba(212,160,60,0.08);
+  border-left: 3px solid var(--gold);
+  padding: 1rem 1.5rem;
+  border-radius: 0 8px 8px 0;
+  text-align: left;
+  margin: 1rem 0;
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
+
+.btn-next-step {
+  margin-top: 1rem;
+  padding: 0.7rem 2rem;
+  background: rgba(212,160,60,0.15);
+  border: 1px solid rgba(212,160,60,0.3);
+  color: var(--gold-light);
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: all 0.3s;
+}
+
+.btn-next-step:hover {
+  background: rgba(212,160,60,0.25);
+}
+
+/* === CHALLENGE PHASE === */
+.challenge-container {
+  background: var(--bg-panel);
+  border: 1px solid rgba(212,160,60,0.12);
+  border-radius: 20px;
+  padding: 2.5rem;
+}
+
+.challenge-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.challenge-header h3 {
+  font-family: 'Cinzel', serif;
+  font-size: 1.2rem;
+  color: var(--gold);
+}
+
+.challenge-progress {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.progress-pip {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid rgba(212,160,60,0.3);
+  transition: all 0.3s;
+}
+
+.progress-pip.done {
+  background: var(--accent-green);
+  border-color: var(--accent-green);
+  box-shadow: 0 0 8px rgba(105,240,174,0.5);
+}
+
+.progress-pip.current {
+  border-color: var(--gold);
+  background: rgba(212,160,60,0.3);
+  animation: pipPulse 1.5s infinite;
+}
+
+@keyframes pipPulse {
+  0%,100% { box-shadow: 0 0 0 0 rgba(212,160,60,0.4); }
+  50% { box-shadow: 0 0 0 6px rgba(212,160,60,0); }
+}
+
+.challenge-question {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.challenge-question .scenario {
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: var(--text);
+  margin-bottom: 1.5rem;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.challenge-question .triangle-display {
+  display: flex;
+  justify-content: center;
+  margin: 1.5rem 0;
+}
+
+.challenge-question .triangle-display canvas {
+  border-radius: 12px;
+}
+
+.answer-input-group {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.answer-input-group label {
+  font-weight: 600;
+  color: var(--accent-cyan);
+  font-size: 1.1rem;
+}
+
+.answer-input-group input {
+  width: 140px;
+  padding: 0.8rem 1rem;
+  background: rgba(0,0,0,0.3);
+  border: 2px solid rgba(212,160,60,0.2);
+  border-radius: 10px;
+  color: var(--text-bright);
+  font-size: 1.2rem;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 600;
+  text-align: center;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+.answer-input-group input:focus {
+  border-color: var(--gold);
+}
+
+.answer-input-group input.correct {
+  border-color: var(--accent-green);
+  box-shadow: 0 0 15px rgba(105,240,174,0.3);
+}
+
+.answer-input-group input.wrong {
+  border-color: var(--accent-red);
+  box-shadow: 0 0 15px rgba(255,82,82,0.3);
+  animation: shake 0.4s ease;
+}
+
+@keyframes shake {
+  0%,100% { transform: translateX(0); }
+  25% { transform: translateX(-8px); }
+  75% { transform: translateX(8px); }
+}
+
+.btn-validate {
+  padding: 0.8rem 2.5rem;
+  background: linear-gradient(135deg, var(--gold), var(--gold-dim));
+  color: var(--bg-deep);
+  border: none;
+  border-radius: 10px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s;
+  letter-spacing: 0.05em;
+}
+
+.btn-validate:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--glow-gold);
+}
+
+.feedback-msg {
+  text-align: center;
+  font-size: 1rem;
+  font-weight: 600;
+  min-height: 2rem;
+  margin-top: 1rem;
+  transition: all 0.3s;
+}
+
+.feedback-msg.success { color: var(--accent-green); }
+.feedback-msg.error { color: var(--accent-red); }
+.feedback-msg.hint { color: var(--accent-blue); }
+
+/* === MULTIPLE CHOICE (Réciproque) === */
+.choices-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  max-width: 500px;
+  margin: 1.5rem auto;
+}
+
+.choice-btn {
+  padding: 1rem;
+  background: rgba(0,0,0,0.2);
+  border: 2px solid rgba(212,160,60,0.15);
+  border-radius: 12px;
+  color: var(--text);
+  font-family: 'Outfit', sans-serif;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.choice-btn:hover {
+  border-color: var(--gold);
+  background: rgba(212,160,60,0.08);
+}
+
+.choice-btn.selected-correct {
+  border-color: var(--accent-green);
+  background: rgba(105,240,174,0.1);
+  color: var(--accent-green);
+}
+
+.choice-btn.selected-wrong {
+  border-color: var(--accent-red);
+  background: rgba(255,82,82,0.1);
+  color: var(--accent-red);
+}
+
+/* === KEY / REWARD MODAL === */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(8px);
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-overlay.visible {
+  display: flex;
+  animation: fadeIn 0.4s ease;
+}
+
+.modal-content {
+  background: var(--bg-card);
+  border: 1px solid rgba(212,160,60,0.3);
+  border-radius: 24px;
+  padding: 3rem;
+  text-align: center;
+  max-width: 480px;
+  width: 90%;
+  position: relative;
+  overflow: hidden;
+}
+
+.modal-content::before {
+  content: '';
+  position: absolute;
+  inset: -50%;
+  background: conic-gradient(from 0deg, transparent, rgba(212,160,60,0.05), transparent, rgba(0,229,255,0.05), transparent);
+  animation: rotateGlow 8s linear infinite;
+}
+
+@keyframes rotateGlow {
+  to { transform: rotate(360deg); }
+}
+
+.modal-inner {
+  position: relative;
+  z-index: 1;
+}
+
+.key-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  animation: bounceIn 0.6s ease;
+}
+
+@keyframes bounceIn {
+  0% { transform: scale(0); }
+  60% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+.modal-content h3 {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 1.5rem;
+  color: var(--gold);
+  margin-bottom: 0.5rem;
+}
+
+.modal-content p {
+  color: var(--text);
+  line-height: 1.7;
+  margin-bottom: 1.5rem;
+}
+
+.key-code {
+  display: inline-block;
+  padding: 0.6rem 2rem;
+  background: rgba(212,160,60,0.1);
+  border: 2px dashed var(--gold);
+  border-radius: 10px;
+  font-family: 'Cinzel', serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--gold-light);
+  letter-spacing: 0.2em;
+  margin-bottom: 1.5rem;
+}
+
+/* === FINAL SCREEN === */
+.final-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 80px);
+  padding: 2rem;
+  text-align: center;
+}
+
+.trophy-icon {
+  font-size: 5rem;
+  margin-bottom: 1.5rem;
+  animation: bounceIn 0.8s ease;
+}
+
+.final-screen h2 {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 2rem;
+  color: var(--gold);
+  margin-bottom: 1rem;
+}
+
+.final-screen p {
+  max-width: 550px;
+  line-height: 1.8;
+  margin-bottom: 2rem;
+  font-size: 1.05rem;
+}
+
+.keys-collected {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.key-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem 1.5rem;
+  background: rgba(212,160,60,0.06);
+  border: 1px solid rgba(212,160,60,0.2);
+  border-radius: 12px;
+}
+
+.key-item .ki-icon { font-size: 2rem; }
+.key-item .ki-code {
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  color: var(--gold-light);
+  letter-spacing: 0.15em;
+  font-size: 0.85rem;
+}
+.key-item .ki-label {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+}
+
+.final-code-box {
+  padding: 1.5rem 3rem;
+  background: linear-gradient(135deg, rgba(212,160,60,0.1), rgba(0,229,255,0.05));
+  border: 2px solid var(--gold);
+  border-radius: 16px;
+  margin-bottom: 2rem;
+  box-shadow: var(--glow-gold);
+}
+
+.final-code-box .label {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+
+.final-code-box .code {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 2rem;
+  font-weight: 900;
+  color: var(--gold);
+  letter-spacing: 0.3em;
+}
+
+/* === HINT SYSTEM === */
+.hint-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 1rem;
+  padding: 0.5rem 1.2rem;
+  background: rgba(79,195,247,0.08);
+  border: 1px solid rgba(79,195,247,0.2);
+  border-radius: 100px;
+  color: var(--accent-blue);
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.hint-btn:hover {
+  background: rgba(79,195,247,0.15);
+}
+
+.hint-text {
+  display: none;
+  margin-top: 0.8rem;
+  padding: 1rem;
+  background: rgba(79,195,247,0.05);
+  border: 1px solid rgba(79,195,247,0.15);
+  border-radius: 10px;
+  font-size: 0.9rem;
+  color: var(--accent-blue);
+  line-height: 1.6;
+}
+
+.hint-text.visible { display: block; }
+
+/* === RESPONSIVE === */
+@media (max-width: 768px) {
+  .game-header { padding: 1rem; }
+  .logo-text h1 { font-size: 1rem; }
+  .header-stats { gap: 0.8rem; }
+  .stat-badge { padding: 0.3rem 0.7rem; font-size: 0.75rem; }
+  .discovery-container, .challenge-container { padding: 1.5rem; }
+  .chapter-card { padding: 1.5rem; }
+  .choices-grid { grid-template-columns: 1fr; }
+  .modal-content { padding: 2rem; }
+}
+
+/* === PARTICLE BURST === */
+.particles-container {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  pointer-events: none;
+}
+
+.particle {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  animation: particleBurst 1s ease-out forwards;
+}
+
+@keyframes particleBurst {
+  0% { transform: translate(0,0) scale(1); opacity: 1; }
+  100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; }
+}
+
+/* Name input */
+.name-input-group {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  justify-content: center;
+}
+
+.name-input-group input {
+  padding: 0.8rem 1.5rem;
+  background: rgba(0,0,0,0.3);
+  border: 2px solid rgba(212,160,60,0.2);
+  border-radius: 10px;
+  color: var(--text-bright);
+  font-size: 1.1rem;
+  font-family: 'Outfit', sans-serif;
+  text-align: center;
+  outline: none;
+  width: 250px;
+  transition: border-color 0.3s;
+}
+
+.name-input-group input:focus {
+  border-color: var(--gold);
+}
+
+.name-input-group input::placeholder {
+  color: var(--text-dim);
+}
+
+/* Score display anim */
+.score-anim {
+  position: fixed;
+  z-index: 250;
+  font-family: 'Cinzel', serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--gold-light);
+  pointer-events: none;
+  animation: scoreFloat 1.2s ease-out forwards;
+}
+
+@keyframes scoreFloat {
+  0% { opacity: 1; transform: translateY(0) scale(1); }
+  100% { opacity: 0; transform: translateY(-60px) scale(1.3); }
+}
+</style>
 </head>
 <body>
-  <div id="root"></div>
+
+<div class="bg-pattern"></div>
+<div class="bg-grid"></div>
+<div class="floating-symbols" id="floatingSymbols"></div>
+<div class="particles-container" id="particles"></div>
+
+<div class="app" id="app">
+  <!-- HEADER -->
+  <header class="game-header">
+    <div class="logo">
+      <div class="logo-icon">
+        <svg viewBox="0 0 44 44" fill="none">
+          <polygon points="6,38 38,38 38,10" stroke="#d4a03c" stroke-width="2" fill="none" opacity="0.6"/>
+          <polygon points="6,38 38,38 38,10" stroke="#f0d078" stroke-width="1" fill="rgba(212,160,60,0.08)"/>
+          <rect x="30" y="30" width="8" height="8" stroke="#d4a03c" stroke-width="1.5" fill="none" opacity="0.4"/>
+          <circle cx="22" cy="28" r="2" fill="#d4a03c"/>
+        </svg>
+      </div>
+      <div class="logo-text">
+        <h1>Le Temple de Pythagore</h1>
+        <span>Jeu Éducatif Interactif</span>
+      </div>
+    </div>
+    <div class="header-stats">
+      <div class="stat-badge">
+        <span class="icon">🔑</span>
+        <span class="value" id="keyCount">0</span>
+        <span>/ 3</span>
+      </div>
+      <div class="stat-badge">
+        <span class="icon">⭐</span>
+        <span class="value" id="scoreDisplay">0</span>
+        <span>pts</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- SCREEN: WELCOME -->
+  <div class="screen active" id="screenWelcome">
+    <div class="welcome">
+      <div class="welcome-temple">
+        <div class="temple-glow"></div>
+        <svg class="temple-svg" viewBox="0 0 280 280" fill="none">
+          <!-- Temple columns -->
+          <rect x="50" y="100" width="14" height="130" fill="rgba(212,160,60,0.15)" stroke="rgba(212,160,60,0.4)" stroke-width="1"/>
+          <rect x="90" y="100" width="14" height="130" fill="rgba(212,160,60,0.15)" stroke="rgba(212,160,60,0.4)" stroke-width="1"/>
+          <rect x="176" y="100" width="14" height="130" fill="rgba(212,160,60,0.15)" stroke="rgba(212,160,60,0.4)" stroke-width="1"/>
+          <rect x="216" y="100" width="14" height="130" fill="rgba(212,160,60,0.15)" stroke="rgba(212,160,60,0.4)" stroke-width="1"/>
+          <!-- Pediment -->
+          <polygon points="30,100 140,40 250,100" fill="rgba(212,160,60,0.08)" stroke="rgba(212,160,60,0.5)" stroke-width="1.5"/>
+          <!-- Base -->
+          <rect x="30" y="230" width="220" height="15" fill="rgba(212,160,60,0.1)" stroke="rgba(212,160,60,0.3)" stroke-width="1"/>
+          <!-- Eye of knowledge -->
+          <circle cx="140" cy="75" r="12" fill="none" stroke="var(--gold)" stroke-width="1.5" opacity="0.8"/>
+          <circle cx="140" cy="75" r="4" fill="var(--gold)" opacity="0.6"/>
+          <!-- Pythagorean triangle -->
+          <polygon points="105,200 175,200 175,155" fill="rgba(0,229,255,0.06)" stroke="rgba(0,229,255,0.4)" stroke-width="1.5"/>
+          <text x="133" y="215" font-family="Cinzel" font-size="10" fill="rgba(0,229,255,0.6)" text-anchor="middle">a²+b²=c²</text>
+          <!-- Stars -->
+          <circle cx="60" cy="50" r="1.5" fill="var(--gold)" opacity="0.4"/>
+          <circle cx="220" cy="35" r="1" fill="var(--gold)" opacity="0.3"/>
+          <circle cx="180" cy="55" r="1.5" fill="var(--gold)" opacity="0.5"/>
+        </svg>
+      </div>
+      <h2>Le Temple de Pythagore</h2>
+      <p class="subtitle">Un voyage au cœur de la géométrie</p>
+      <p class="description">
+        Un ancien temple renferme trois salles secrètes. Chacune cache une <strong style="color:var(--gold)">clé dorée</strong> 
+        que tu ne pourras obtenir qu'en maîtrisant les mystères du triangle rectangle. 
+        Découvre, calcule, prouve — et rassemble les trois clés pour ouvrir le coffre final.
+      </p>
+      <div class="name-input-group">
+        <input type="text" id="playerName" placeholder="Ton prénom d'explorateur..." maxlength="20">
+      </div>
+      <button class="btn-primary" onclick="startGame()">Entrer dans le Temple</button>
+    </div>
+  </div>
+
+  <!-- SCREEN: CHAPTER SELECT -->
+  <div class="screen" id="screenChapters">
+    <div class="chapter-select">
+      <h2 class="section-title">Les Salles du Temple</h2>
+      <p class="section-subtitle" id="playerGreeting">Choisis ta prochaine épreuve</p>
+      <div class="chapters-grid" id="chaptersGrid">
+        <!-- Generated by JS -->
+      </div>
+      <div style="text-align:center;margin-top:2rem;" id="finalDoorContainer" class="hidden">
+        <button class="btn-primary" onclick="showFinalScreen()">🏛️ Ouvrir le Coffre Final</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN: CHAPTER 1 - Discovery -->
+  <div class="screen" id="screenChapter1">
+    <div class="game-area">
+      <button class="back-btn" onclick="showScreen('screenChapters')">← Retour aux salles</button>
+      
+      <div class="discovery-container">
+        <h3>🔍 Salle I — La Découverte</h3>
+        <p style="text-align:center;color:var(--text-dim);margin-bottom:2rem;">
+          Manipule le triangle et observe les aires des carrés construits sur chaque côté.
+        </p>
+        
+        <div class="discovery-visual">
+          <div class="triangle-canvas">
+            <canvas id="discoveryCanvas" width="550" height="420"></canvas>
+          </div>
+          
+          <div class="slider-group">
+            <div class="slider-row">
+              <label style="color:#ff7043">a</label>
+              <input type="range" id="sliderA" min="2" max="8" step="1" value="3">
+              <span class="val" id="valA">3</span>
+            </div>
+            <div class="slider-row">
+              <label style="color:#42a5f5">b</label>
+              <input type="range" id="sliderB" min="2" max="8" step="1" value="4">
+              <span class="val" id="valB">4</span>
+            </div>
+          </div>
+
+          <div class="area-equation" id="areaEquation">
+            <!-- Filled by JS -->
+          </div>
+        </div>
+
+        <div class="discovery-narrative" id="discoveryNarrative">
+          <div class="narrative-step visible" id="narStep0">
+            <p>
+              Observe le triangle rectangle et les trois carrés construits sur chacun de ses côtés. 
+              Le carré <strong style="color:#ff7043">orange</strong> a pour côté <em>a</em>, 
+              le carré <strong style="color:#42a5f5">bleu</strong> a pour côté <em>b</em>, 
+              et le carré <strong style="color:#ab47bc">violet</strong> a pour côté <em>c</em> (l'hypoténuse).
+            </p>
+            <div class="highlight-box">
+              🎯 Change les valeurs de <em>a</em> et <em>b</em> avec les curseurs. Que remarques-tu sur la somme des aires des deux petits carrés comparée à l'aire du grand carré ?
+            </div>
+            <button class="btn-next-step" onclick="showNarrative(1)">J'ai compris → Continuer</button>
+          </div>
+          <div class="narrative-step" id="narStep1">
+            <p>
+              <strong style="color:var(--accent-green)">Bravo !</strong> Tu as découvert que l'aire du carré construit sur l'hypoténuse est <em>toujours</em> égale à la somme des aires des carrés construits sur les deux autres côtés.
+            </p>
+            <div class="highlight-box">
+              📐 C'est le <strong>théorème de Pythagore</strong> : dans un triangle rectangle, 
+              <strong>a² + b² = c²</strong> où <em>c</em> est l'hypoténuse (le côté opposé à l'angle droit).
+            </div>
+            <button class="btn-next-step" onclick="showNarrative(2)">Continuer</button>
+          </div>
+          <div class="narrative-step" id="narStep2">
+            <p>
+              Maintenant, prouve ta compréhension ! Réponds aux questions suivantes pour obtenir la <strong style="color:var(--gold)">première clé dorée</strong>.
+            </p>
+            <button class="btn-primary" onclick="startChapter1Challenges()" style="font-size:0.95rem;padding:0.8rem 2rem;">
+              Commencer les épreuves
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chapter 1 challenges -->
+      <div class="challenge-container" id="ch1Challenges" style="display:none;">
+        <div class="challenge-header">
+          <h3 id="ch1Title">Épreuve 1</h3>
+          <div class="challenge-progress" id="ch1Progress"></div>
+        </div>
+        <div id="ch1QuestionArea"></div>
+        <div class="feedback-msg" id="ch1Feedback"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN: CHAPTER 2 - Calcul côté -->
+  <div class="screen" id="screenChapter2">
+    <div class="game-area">
+      <button class="back-btn" onclick="showScreen('screenChapters')">← Retour aux salles</button>
+      <div class="challenge-container">
+        <div class="challenge-header">
+          <h3 id="ch2Title">Salle II — Trouver un côté caché</h3>
+          <div class="challenge-progress" id="ch2Progress"></div>
+        </div>
+        <p style="text-align:center;color:var(--text-dim);margin-bottom:2rem;" id="ch2Intro">
+          Tu connais l'hypoténuse et un côté. Utilise Pythagore pour retrouver le côté manquant : <strong>a² = c² − b²</strong>
+        </p>
+        <div id="ch2QuestionArea"></div>
+        <div class="feedback-msg" id="ch2Feedback"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN: CHAPTER 3 - Réciproque -->
+  <div class="screen" id="screenChapter3">
+    <div class="game-area">
+      <button class="back-btn" onclick="showScreen('screenChapters')">← Retour aux salles</button>
+      <div class="challenge-container">
+        <div class="challenge-header">
+          <h3 id="ch3Title">Salle III — La Réciproque</h3>
+          <div class="challenge-progress" id="ch3Progress"></div>
+        </div>
+        <p style="text-align:center;color:var(--text-dim);margin-bottom:2rem;" id="ch3Intro">
+          Si a² + b² = c², alors le triangle est rectangle. Utilise cette propriété pour identifier les triangles rectangles !
+        </p>
+        <div id="ch3QuestionArea"></div>
+        <div class="feedback-msg" id="ch3Feedback"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN: FINAL -->
+  <div class="screen" id="screenFinal">
+    <div class="final-screen">
+      <div class="trophy-icon">🏆</div>
+      <h2>Temple Maîtrisé !</h2>
+      <p id="finalMessage">Tu as rassemblé les trois clés dorées et ouvert le coffre sacré du Temple de Pythagore. Tu maîtrises désormais le théorème !</p>
+      <div class="keys-collected" id="keysCollected"></div>
+      <div class="final-code-box">
+        <div class="label">Code du Maître Géomètre</div>
+        <div class="code" id="finalCode">—</div>
+      </div>
+      <p style="font-size:0.9rem;color:var(--text-dim);">Score final : <strong id="finalScore" style="color:var(--gold-light)">0</strong> points</p>
+      <button class="btn-secondary" style="margin-top:1rem;" onclick="resetGame()">🔄 Recommencer l'aventure</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal-content">
+    <div class="modal-inner">
+      <div class="key-icon" id="modalIcon">🔑</div>
+      <h3 id="modalTitle">Clé obtenue !</h3>
+      <p id="modalText">Description</p>
+      <div class="key-code" id="modalCode">PYTH</div>
+      <button class="btn-primary" style="font-size:0.9rem;padding:0.7rem 2rem;" id="modalBtn" onclick="closeModal()">Continuer</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// GAME STATE
+// ============================================================
+const state = {
+  playerName: '',
+  score: 0,
+  keys: [],
+  keyCodes: ['', '', ''],
+  chaptersCompleted: [false, false, false],
+  currentChapter: 0,
+  currentQuestion: 0,
+  attempts: 0,
+};
+
+const CHAPTER_DATA = [
+  { 
+    title: "La Découverte", 
+    desc: "Comprends visuellement pourquoi a² + b² = c² en manipulant les aires des carrés.", 
+    icon: "🔍"
+  },
+  { 
+    title: "Le Côté Caché", 
+    desc: "Calcule un côté manquant d'un triangle rectangle grâce au théorème.", 
+    icon: "📐"
+  },
+  { 
+    title: "La Réciproque", 
+    desc: "Détermine si un triangle est rectangle en vérifiant la relation de Pythagore.", 
+    icon: "⚖️"
+  },
+];
+
+// ============================================================
+// CHAPTER 1 QUESTIONS (hypotenuse calc after discovery)
+// ============================================================
+const ch1Questions = [
+  {
+    scenario: "Un mur du temple forme un triangle rectangle avec a = 3 et b = 4. Quelle est la longueur de l'hypoténuse c ?",
+    a: 3, b: 4, answer: 5, find: 'c',
+    hint: "c² = a² + b² = 9 + 16 = 25, donc c = √25"
+  },
+  {
+    scenario: "Une dalle triangulaire a pour côtés de l'angle droit a = 5 et b = 12. Calcule c.",
+    a: 5, b: 12, answer: 13, find: 'c',
+    hint: "c² = 25 + 144 = 169, donc c = √169"
+  },
+  {
+    scenario: "Un passage secret forme un triangle rectangle avec a = 6 et b = 8. Trouve c.",
+    a: 6, b: 8, answer: 10, find: 'c',
+    hint: "c² = 36 + 64 = 100, donc c = √100"
+  },
+  {
+    scenario: "L'arcade du temple a la forme d'un triangle rectangle avec a = 8 et b = 15. Quelle est l'hypoténuse ?",
+    a: 8, b: 15, answer: 17, find: 'c',
+    hint: "c² = 64 + 225 = 289, donc c = √289"
+  },
+];
+
+// ============================================================
+// CHAPTER 2 QUESTIONS (find a side)
+// ============================================================
+const ch2Questions = [
+  {
+    scenario: "Un pilier forme un triangle rectangle. L'hypoténuse mesure c = 10 et un côté b = 6. Trouve le côté a.",
+    known: {c: 10, b: 6}, answer: 8, find: 'a',
+    hint: "a² = c² − b² = 100 − 36 = 64, donc a = √64"
+  },
+  {
+    scenario: "Une poutre diagonale a pour hypoténuse c = 13, et un côté horizontal a = 5. Calcule b.",
+    known: {c: 13, a: 5}, answer: 12, find: 'b',
+    hint: "b² = c² − a² = 169 − 25 = 144, donc b = √144"
+  },
+  {
+    scenario: "Le toit du temple a une pente dont l'hypoténuse mesure c = 17 et la base b = 15. Quelle est la hauteur a ?",
+    known: {c: 17, b: 15}, answer: 8, find: 'a',
+    hint: "a² = c² − b² = 289 − 225 = 64, donc a = √64"
+  },
+  {
+    scenario: "Un escalier secret : hypoténuse c = 25, côté vertical a = 7. Quelle est la longueur horizontale b ?",
+    known: {c: 25, a: 7}, answer: 24, find: 'b',
+    hint: "b² = c² − a² = 625 − 49 = 576, donc b = √576"
+  },
+];
+
+// ============================================================
+// CHAPTER 3 QUESTIONS (réciproque - is it a right triangle?)
+// ============================================================
+const ch3Questions = [
+  {
+    scenario: "Une relique triangulaire a pour côtés : 5, 12 et 13. Est-ce un triangle rectangle ?",
+    sides: [5, 12, 13], isRight: true,
+    explain: "5² + 12² = 25 + 144 = 169 = 13² ✓"
+  },
+  {
+    scenario: "Un vitrail a la forme d'un triangle de côtés : 7, 8 et 10. Est-ce un triangle rectangle ?",
+    sides: [7, 8, 10], isRight: false,
+    explain: "7² + 8² = 49 + 64 = 113 ≠ 100 = 10² ✗"
+  },
+  {
+    scenario: "Un bouclier triangulaire mesure 9, 40 et 41. Triangle rectangle ?",
+    sides: [9, 40, 41], isRight: true,
+    explain: "9² + 40² = 81 + 1600 = 1681 = 41² ✓"
+  },
+  {
+    scenario: "Une mosaïque en forme de triangle : côtés 6, 7 et 9. Rectangle ou non ?",
+    sides: [6, 7, 9], isRight: false,
+    explain: "6² + 7² = 36 + 49 = 85 ≠ 81 = 9² ✗"
+  },
+  {
+    scenario: "Dernière épreuve ! Un fragment ancien a pour côtés 20, 21 et 29. Ce triangle est-il rectangle ?",
+    sides: [20, 21, 29], isRight: true,
+    explain: "20² + 21² = 400 + 441 = 841 = 29² ✓"
+  },
+];
+
+// ============================================================
+// FLOATING SYMBOLS
+// ============================================================
+function initFloatingSymbols() {
+  const container = document.getElementById('floatingSymbols');
+  const symbols = ['△', 'π', '∠', '√', '²', '∑', 'φ', '∞'];
+  for (let i = 0; i < 15; i++) {
+    const span = document.createElement('span');
+    span.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+    span.style.left = Math.random() * 100 + '%';
+    span.style.fontSize = (12 + Math.random() * 28) + 'px';
+    span.style.animationDuration = (15 + Math.random() * 25) + 's';
+    span.style.animationDelay = Math.random() * 20 + 's';
+    container.appendChild(span);
+  }
+}
+
+// ============================================================
+// PARTICLES
+// ============================================================
+function burstParticles(x, y, color = '#d4a03c') {
+  const container = document.getElementById('particles');
+  for (let i = 0; i < 20; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    const angle = (Math.PI * 2 / 20) * i + Math.random() * 0.5;
+    const dist = 60 + Math.random() * 100;
+    p.style.left = x + 'px';
+    p.style.top = y + 'px';
+    p.style.background = color;
+    p.style.setProperty('--tx', Math.cos(angle) * dist + 'px');
+    p.style.setProperty('--ty', Math.sin(angle) * dist + 'px');
+    container.appendChild(p);
+    setTimeout(() => p.remove(), 1100);
+  }
+}
+
+function showScoreAnim(x, y, points) {
+  const el = document.createElement('div');
+  el.className = 'score-anim';
+  el.textContent = '+' + points;
+  el.style.left = x + 'px';
+  el.style.top = y + 'px';
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 1300);
+}
+
+// ============================================================
+// SCREEN MANAGEMENT
+// ============================================================
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+function updateStats() {
+  document.getElementById('keyCount').textContent = state.keys.length;
+  document.getElementById('scoreDisplay').textContent = state.score;
+}
+
+function addScore(pts, evt) {
+  state.score += pts;
+  updateStats();
+  if (evt) {
+    const rect = evt.target.getBoundingClientRect();
+    showScoreAnim(rect.left + rect.width/2, rect.top, pts);
+    burstParticles(rect.left + rect.width/2, rect.top + rect.height/2, '#69f0ae');
+  }
+}
+
+// ============================================================
+// START GAME
+// ============================================================
+function startGame() {
+  const nameInput = document.getElementById('playerName');
+  state.playerName = nameInput.value.trim() || 'Explorateur';
+  showScreen('screenChapters');
+  renderChapters();
+}
+
+function resetGame() {
+  state.score = 0;
+  state.keys = [];
+  state.keyCodes = ['', '', ''];
+  state.chaptersCompleted = [false, false, false];
+  state.currentChapter = 0;
+  state.currentQuestion = 0;
+  state.attempts = 0;
+  updateStats();
+  document.getElementById('playerName').value = state.playerName;
+  // Reset discovery narrative
+  document.querySelectorAll('.narrative-step').forEach(s => s.classList.remove('visible'));
+  document.getElementById('narStep0').classList.add('visible');
+  document.getElementById('ch1Challenges').style.display = 'none';
+  showScreen('screenWelcome');
+}
+
+// ============================================================
+// CHAPTER SELECT
+// ============================================================
+function renderChapters() {
+  const grid = document.getElementById('chaptersGrid');
+  const greeting = document.getElementById('playerGreeting');
+  greeting.textContent = `${state.playerName}, choisis ta prochaine épreuve`;
+  
+  grid.innerHTML = CHAPTER_DATA.map((ch, i) => {
+    const completed = state.chaptersCompleted[i];
+    const locked = i > 0 && !state.chaptersCompleted[i - 1];
+    let cls = 'chapter-card';
+    if (completed) cls += ' completed';
+    if (locked) cls += ' locked';
+    
+    return `
+      <div class="${cls}" onclick="${locked ? '' : `enterChapter(${i})`}">
+        <div class="chapter-number">${ch.icon}</div>
+        <h3>${locked ? '🔒 ' : ''}Salle ${['I','II','III'][i]} — ${ch.title}</h3>
+        <p>${ch.desc}</p>
+        <div class="chapter-status">
+          <div class="dot"></div>
+          <span>${completed ? 'Clé obtenue ✓' : (locked ? 'Verrouillée' : 'Prête à explorer')}</span>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  const finalContainer = document.getElementById('finalDoorContainer');
+  if (state.chaptersCompleted.every(c => c)) {
+    finalContainer.classList.remove('hidden');
+    finalContainer.style.display = '';
+  } else {
+    finalContainer.style.display = 'none';
+  }
+}
+
+function enterChapter(index) {
+  state.currentChapter = index;
+  state.currentQuestion = 0;
+  state.attempts = 0;
+  
+  if (index === 0) {
+    showScreen('screenChapter1');
+    initDiscoveryCanvas();
+  } else if (index === 1) {
+    showScreen('screenChapter2');
+    initChapter2();
+  } else if (index === 2) {
+    showScreen('screenChapter3');
+    initChapter3();
+  }
+}
+
+// ============================================================
+// DISCOVERY CANVAS (Chapter 1 visual)
+// ============================================================
+function initDiscoveryCanvas() {
+  const canvas = document.getElementById('discoveryCanvas');
+  const ctx = canvas.getContext('2d');
+  const sliderA = document.getElementById('sliderA');
+  const sliderB = document.getElementById('sliderB');
+  
+  function draw() {
+    const a = parseInt(sliderA.value);
+    const b = parseInt(sliderB.value);
+    const c = Math.sqrt(a*a + b*b);
+    
+    document.getElementById('valA').textContent = a;
+    document.getElementById('valB').textContent = b;
+    
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = 550 * dpr;
+    canvas.height = 420 * dpr;
+    ctx.scale(dpr, dpr);
+    canvas.style.width = '550px';
+    canvas.style.height = '420px';
+    
+    ctx.clearRect(0, 0, 550, 420);
+    
+    const scale = 32;
+    const ox = 160, oy = 300;
+    
+    const ax = ox, ay = oy;
+    const bx = ox + b * scale, by = oy;
+    const cx = ox, cy = oy - a * scale;
+    
+    // Square on side a (vertical, left) - orange
+    ctx.fillStyle = 'rgba(255,112,67,0.12)';
+    ctx.strokeStyle = 'rgba(255,112,67,0.6)';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.rect(ox - a * scale, oy - a * scale, a * scale, a * scale);
+    ctx.fill();
+    ctx.stroke();
+    
+    ctx.fillStyle = 'rgba(255,112,67,0.7)';
+    ctx.font = '600 14px Outfit';
+    ctx.textAlign = 'center';
+    ctx.fillText(`a² = ${a*a}`, ox - a * scale / 2, oy - a * scale / 2 + 5);
+    
+    // Square on side b (horizontal, bottom) - blue
+    ctx.fillStyle = 'rgba(66,165,245,0.12)';
+    ctx.strokeStyle = 'rgba(66,165,245,0.6)';
+    ctx.beginPath();
+    ctx.rect(ox, oy, b * scale, b * scale);
+    ctx.fill();
+    ctx.stroke();
+    
+    ctx.fillStyle = 'rgba(66,165,245,0.7)';
+    ctx.fillText(`b² = ${b*b}`, ox + b * scale / 2, oy + b * scale / 2 + 5);
+    
+    // Square on hypotenuse c - purple
+    const angle = Math.atan2(cy - by, cx - bx);
+    const cLen = c * scale;
+    
+    ctx.save();
+    ctx.translate(bx, by);
+    ctx.rotate(angle);
+    ctx.fillStyle = 'rgba(171,71,188,0.10)';
+    ctx.strokeStyle = 'rgba(171,71,188,0.5)';
+    ctx.beginPath();
+    ctx.rect(0, 0, cLen, cLen);
+    ctx.fill();
+    ctx.stroke();
+    
+    ctx.fillStyle = 'rgba(171,71,188,0.7)';
+    ctx.rotate(-angle);
+    ctx.restore();
+    
+    // Label for c² 
+    const midHx = (bx + cx) / 2;
+    const midHy = (by + cy) / 2;
+    const perpX = midHx + Math.cos(angle + Math.PI/2) * cLen / 2;
+    const perpY = midHy + Math.sin(angle + Math.PI/2) * cLen / 2;
+    ctx.fillStyle = 'rgba(171,71,188,0.8)';
+    ctx.font = '600 14px Outfit';
+    ctx.textAlign = 'center';
+    ctx.fillText(`c² = ${Math.round(c*c)}`, perpX, perpY + 5);
+    
+    // Triangle
+    ctx.strokeStyle = 'rgba(255,255,255,0.8)';
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    ctx.moveTo(ax, ay);
+    ctx.lineTo(bx, by);
+    ctx.lineTo(cx, cy);
+    ctx.closePath();
+    ctx.stroke();
+    
+    // Right angle indicator
+    const sq = 12;
+    ctx.strokeStyle = 'rgba(255,255,255,0.4)';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(ax + sq, ay);
+    ctx.lineTo(ax + sq, ay - sq);
+    ctx.lineTo(ax, ay - sq);
+    ctx.stroke();
+    
+    // Labels
+    ctx.font = '700 16px Outfit';
+    ctx.textAlign = 'center';
+    
+    ctx.fillStyle = '#ff7043';
+    ctx.fillText('a = ' + a, ax - 18, (ay + cy) / 2);
+    
+    ctx.fillStyle = '#42a5f5';
+    ctx.fillText('b = ' + b, (ax + bx) / 2, ay + 22);
+    
+    ctx.fillStyle = '#ab47bc';
+    ctx.fillText('c = ' + c.toFixed(2), (bx + cx) / 2 + 22, (by + cy) / 2 - 10);
+    
+    // Update equation display
+    const eq = document.getElementById('areaEquation');
+    const sum = a*a + b*b;
+    const cSq = Math.round(c*c);
+    const match = sum === cSq;
+    eq.innerHTML = `
+      <div class="eq-line"><span class="colored-a">a² = ${a}² = ${a*a}</span></div>
+      <div class="eq-line"><span class="colored-b">b² = ${b}² = ${b*b}</span></div>
+      <div class="eq-line"><span class="colored-a">${a*a}</span> + <span class="colored-b">${b*b}</span> = <strong>${sum}</strong></div>
+      <div class="eq-line"><span class="colored-c">c² = ${c.toFixed(2)}² ≈ ${cSq}</span></div>
+      <div class="eq-result">${match ? '✅' : '≈'} a² + b² ${match ? '=' : '≈'} c²</div>
+    `;
+  }
+  
+  sliderA.addEventListener('input', draw);
+  sliderB.addEventListener('input', draw);
+  draw();
+}
+
+function showNarrative(step) {
+  document.querySelectorAll('.narrative-step').forEach(s => s.classList.remove('visible'));
+  document.getElementById('narStep' + step).classList.add('visible');
+}
+
+// ============================================================
+// CHAPTER 1 CHALLENGES
+// ============================================================
+function startChapter1Challenges() {
+  state.currentQuestion = 0;
+  document.getElementById('ch1Challenges').style.display = 'block';
+  document.getElementById('ch1Challenges').scrollIntoView({behavior: 'smooth'});
+  renderCh1Question();
+}
+
+function renderCh1Question() {
+  const q = ch1Questions[state.currentQuestion];
+  const area = document.getElementById('ch1QuestionArea');
+  const progress = document.getElementById('ch1Progress');
+  document.getElementById('ch1Feedback').textContent = '';
+  document.getElementById('ch1Title').textContent = `Épreuve ${state.currentQuestion + 1} / ${ch1Questions.length}`;
+  
+  progress.innerHTML = ch1Questions.map((_, i) => {
+    let cls = 'progress-pip';
+    if (i < state.currentQuestion) cls += ' done';
+    if (i === state.currentQuestion) cls += ' current';
+    return `<div class="${cls}"></div>`;
+  }).join('');
+  
+  area.innerHTML = `
+    <div class="challenge-question">
+      <p class="scenario">${q.scenario}</p>
+      <canvas id="ch1Canvas" width="300" height="220" style="border-radius:12px;"></canvas>
+      <div class="answer-input-group" style="margin-top:1.5rem;">
+        <label>c =</label>
+        <input type="number" id="ch1Answer" placeholder="?" step="any" onkeydown="if(event.key==='Enter')validateCh1()">
+        <button class="btn-validate" onclick="validateCh1()">Valider</button>
+      </div>
+      <button class="hint-btn" onclick="toggleHint('ch1')">💡 Indice</button>
+      <div class="hint-text" id="ch1Hint">${q.hint}</div>
+    </div>
+  `;
+  
+  drawQuestionTriangle('ch1Canvas', q.a, q.b, null, 'c = ?');
+  state.attempts = 0;
+}
+
+function validateCh1() {
+  const q = ch1Questions[state.currentQuestion];
+  const input = document.getElementById('ch1Answer');
+  const val = parseFloat(input.value);
+  const fb = document.getElementById('ch1Feedback');
+  
+  if (isNaN(val)) { fb.textContent = 'Entre un nombre !'; fb.className = 'feedback-msg error'; return; }
+  
+  state.attempts++;
+  
+  if (Math.abs(val - q.answer) < 0.1) {
+    input.classList.add('correct');
+    input.classList.remove('wrong');
+    fb.textContent = '✅ Correct !';
+    fb.className = 'feedback-msg success';
+    const pts = state.attempts === 1 ? 30 : (state.attempts === 2 ? 20 : 10);
+    addScore(pts, event);
+    
+    setTimeout(() => {
+      state.currentQuestion++;
+      if (state.currentQuestion >= ch1Questions.length) {
+        completeCh1();
+      } else {
+        renderCh1Question();
+      }
+    }, 1200);
+  } else {
+    input.classList.add('wrong');
+    input.classList.remove('correct');
+    setTimeout(() => input.classList.remove('wrong'), 500);
+    
+    if (state.attempts >= 3) {
+      fb.innerHTML = `La réponse était <strong>${q.answer}</strong>. ${q.hint}`;
+      fb.className = 'feedback-msg hint';
+      setTimeout(() => {
+        state.currentQuestion++;
+        if (state.currentQuestion >= ch1Questions.length) {
+          completeCh1();
+        } else {
+          renderCh1Question();
+        }
+      }, 2500);
+    } else {
+      fb.textContent = `❌ Essaie encore ! (tentative ${state.attempts}/3)`;
+      fb.className = 'feedback-msg error';
+    }
+  }
+}
+
+function completeCh1() {
+  const code = 'HYPO';
+  state.chaptersCompleted[0] = true;
+  state.keyCodes[0] = code;
+  state.keys.push({icon: '🔑', code, label: 'Salle I'});
+  updateStats();
+  showModal('🔑', 'Clé de l\'Hypoténuse', 'Tu as prouvé ta capacité à calculer l\'hypoténuse d\'un triangle rectangle. La première clé est à toi !', code, () => {
+    showScreen('screenChapters');
+    renderChapters();
+  });
+}
+
+// ============================================================
+// CHAPTER 2
+// ============================================================
+function initChapter2() {
+  state.currentQuestion = 0;
+  renderCh2Question();
+}
+
+function renderCh2Question() {
+  const q = ch2Questions[state.currentQuestion];
+  const area = document.getElementById('ch2QuestionArea');
+  const progress = document.getElementById('ch2Progress');
+  document.getElementById('ch2Feedback').textContent = '';
+  document.getElementById('ch2Title').textContent = `Salle II — Épreuve ${state.currentQuestion + 1} / ${ch2Questions.length}`;
+  
+  progress.innerHTML = ch2Questions.map((_, i) => {
+    let cls = 'progress-pip';
+    if (i < state.currentQuestion) cls += ' done';
+    if (i === state.currentQuestion) cls += ' current';
+    return `<div class="${cls}"></div>`;
+  }).join('');
+  
+  const findLabel = q.find;
+  const knownA = q.known.a !== undefined ? q.known.a : '?';
+  const knownB = q.known.b !== undefined ? q.known.b : '?';
+  const knownC = q.known.c;
+  
+  area.innerHTML = `
+    <div class="challenge-question">
+      <p class="scenario">${q.scenario}</p>
+      <canvas id="ch2Canvas" width="300" height="220" style="border-radius:12px;"></canvas>
+      <div class="answer-input-group" style="margin-top:1.5rem;">
+        <label>${findLabel} =</label>
+        <input type="number" id="ch2Answer" placeholder="?" step="any" onkeydown="if(event.key==='Enter')validateCh2()">
+        <button class="btn-validate" onclick="validateCh2()">Valider</button>
+      </div>
+      <button class="hint-btn" onclick="toggleHint('ch2')">💡 Indice</button>
+      <div class="hint-text" id="ch2Hint">${q.hint}</div>
+    </div>
+  `;
+  
+  const a = q.known.a || q.answer;
+  const b = q.known.b || q.answer;
+  drawQuestionTriangle('ch2Canvas', a, b, knownC, `${findLabel} = ?`);
+  state.attempts = 0;
+}
+
+function validateCh2() {
+  const q = ch2Questions[state.currentQuestion];
+  const input = document.getElementById('ch2Answer');
+  const val = parseFloat(input.value);
+  const fb = document.getElementById('ch2Feedback');
+  
+  if (isNaN(val)) { fb.textContent = 'Entre un nombre !'; fb.className = 'feedback-msg error'; return; }
+  
+  state.attempts++;
+  
+  if (Math.abs(val - q.answer) < 0.1) {
+    input.classList.add('correct');
+    fb.textContent = '✅ Correct !';
+    fb.className = 'feedback-msg success';
+    const pts = state.attempts === 1 ? 30 : (state.attempts === 2 ? 20 : 10);
+    addScore(pts, event);
+    
+    setTimeout(() => {
+      state.currentQuestion++;
+      if (state.currentQuestion >= ch2Questions.length) {
+        completeCh2();
+      } else {
+        renderCh2Question();
+      }
+    }, 1200);
+  } else {
+    input.classList.add('wrong');
+    setTimeout(() => input.classList.remove('wrong'), 500);
+    
+    if (state.attempts >= 3) {
+      fb.innerHTML = `La réponse était <strong>${q.answer}</strong>. ${q.hint}`;
+      fb.className = 'feedback-msg hint';
+      setTimeout(() => {
+        state.currentQuestion++;
+        if (state.currentQuestion >= ch2Questions.length) {
+          completeCh2();
+        } else {
+          renderCh2Question();
+        }
+      }, 2500);
+    } else {
+      fb.textContent = `❌ Essaie encore ! (tentative ${state.attempts}/3)`;
+      fb.className = 'feedback-msg error';
+    }
+  }
+}
+
+function completeCh2() {
+  const code = 'COTE';
+  state.chaptersCompleted[1] = true;
+  state.keyCodes[1] = code;
+  state.keys.push({icon: '🗝️', code, label: 'Salle II'});
+  updateStats();
+  showModal('🗝️', 'Clé du Côté Caché', 'Tu sais retrouver n\'importe quel côté d\'un triangle rectangle. Voici ta deuxième clé !', code, () => {
+    showScreen('screenChapters');
+    renderChapters();
+  });
+}
+
+// ============================================================
+// CHAPTER 3
+// ============================================================
+function initChapter3() {
+  state.currentQuestion = 0;
+  renderCh3Question();
+}
+
+function renderCh3Question() {
+  const q = ch3Questions[state.currentQuestion];
+  const area = document.getElementById('ch3QuestionArea');
+  const progress = document.getElementById('ch3Progress');
+  document.getElementById('ch3Feedback').textContent = '';
+  document.getElementById('ch3Title').textContent = `Salle III — Épreuve ${state.currentQuestion + 1} / ${ch3Questions.length}`;
+  
+  progress.innerHTML = ch3Questions.map((_, i) => {
+    let cls = 'progress-pip';
+    if (i < state.currentQuestion) cls += ' done';
+    if (i === state.currentQuestion) cls += ' current';
+    return `<div class="${cls}"></div>`;
+  }).join('');
+  
+  const [sa, sb, sc] = q.sides;
+  
+  area.innerHTML = `
+    <div class="challenge-question">
+      <p class="scenario">${q.scenario}</p>
+      <canvas id="ch3Canvas" width="300" height="220" style="border-radius:12px;"></canvas>
+      <div class="highlight-box" style="max-width:400px;margin:1rem auto;text-align:center;border-left-color:var(--accent-cyan);">
+        Vérifie : ${sa}² + ${sb}² ${q.isRight ? '=' : '≟'} ${sc}²<br>
+        ${sa*sa} + ${sb*sb} = ${sa*sa+sb*sb} &nbsp;et&nbsp; ${sc}² = ${sc*sc}
+      </div>
+      <div class="choices-grid">
+        <button class="choice-btn" onclick="validateCh3(true, this)">✅ Oui, rectangle</button>
+        <button class="choice-btn" onclick="validateCh3(false, this)">❌ Non, pas rectangle</button>
+      </div>
+    </div>
+  `;
+  
+  drawTriangleFromSides('ch3Canvas', q.sides);
+}
+
+function validateCh3(answer, btn) {
+  const q = ch3Questions[state.currentQuestion];
+  const fb = document.getElementById('ch3Feedback');
+  const btns = document.querySelectorAll('.choice-btn');
+  btns.forEach(b => b.style.pointerEvents = 'none');
+  
+  if (answer === q.isRight) {
+    btn.classList.add('selected-correct');
+    fb.innerHTML = `✅ Correct ! ${q.explain}`;
+    fb.className = 'feedback-msg success';
+    addScore(25, event);
+  } else {
+    btn.classList.add('selected-wrong');
+    fb.innerHTML = `❌ Non... ${q.explain}`;
+    fb.className = 'feedback-msg error';
+  }
+  
+  setTimeout(() => {
+    state.currentQuestion++;
+    if (state.currentQuestion >= ch3Questions.length) {
+      completeCh3();
+    } else {
+      renderCh3Question();
+    }
+  }, 2000);
+}
+
+function completeCh3() {
+  const code = 'RECI';
+  state.chaptersCompleted[2] = true;
+  state.keyCodes[2] = code;
+  state.keys.push({icon: '⚷', code, label: 'Salle III'});
+  updateStats();
+  showModal('⚷', 'Clé de la Réciproque', 'Tu maîtrises la réciproque du théorème de Pythagore ! Voici la dernière clé.', code, () => {
+    showScreen('screenChapters');
+    renderChapters();
+  });
+}
+
+// ============================================================
+// DRAWING HELPERS
+// ============================================================
+function drawQuestionTriangle(canvasId, a, b, c, unknownLabel) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width = 300 * dpr;
+  canvas.height = 220 * dpr;
+  ctx.scale(dpr, dpr);
+  
+  ctx.clearRect(0, 0, 300, 220);
+  
+  const scale = 12;
+  const ox = 60, oy = 170;
+  const bx = ox + b * scale, by = oy;
+  const cx = ox, cy = oy - a * scale;
+  
+  // Fill
+  ctx.fillStyle = 'rgba(0,229,255,0.06)';
+  ctx.beginPath();
+  ctx.moveTo(ox, oy);
+  ctx.lineTo(bx, by);
+  ctx.lineTo(cx, cy);
+  ctx.closePath();
+  ctx.fill();
+  
+  // Stroke
+  ctx.strokeStyle = 'rgba(255,255,255,0.7)';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(ox, oy);
+  ctx.lineTo(bx, by);
+  ctx.lineTo(cx, cy);
+  ctx.closePath();
+  ctx.stroke();
+  
+  // Right angle
+  const sq = 10;
+  ctx.strokeStyle = 'rgba(255,255,255,0.3)';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.moveTo(ox + sq, oy);
+  ctx.lineTo(ox + sq, oy - sq);
+  ctx.lineTo(ox, oy - sq);
+  ctx.stroke();
+  
+  // Labels
+  ctx.font = '600 13px Outfit';
+  ctx.textAlign = 'center';
+  
+  ctx.fillStyle = '#ff7043';
+  ctx.fillText('a = ' + a, ox - 22, (oy + cy) / 2);
+  
+  ctx.fillStyle = '#42a5f5';
+  ctx.fillText('b = ' + b, (ox + bx) / 2, oy + 18);
+  
+  ctx.fillStyle = '#ab47bc';
+  const hyp = c || Math.sqrt(a*a + b*b);
+  ctx.fillText(unknownLabel || ('c = ' + hyp.toFixed(1)), (bx + cx) / 2 + 20, (by + cy) / 2 - 8);
+}
+
+function drawTriangleFromSides(canvasId, sides) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width = 300 * dpr;
+  canvas.height = 220 * dpr;
+  ctx.scale(dpr, dpr);
+  
+  ctx.clearRect(0, 0, 300, 220);
+  
+  const [a, b, c] = [...sides].sort((x, y) => x - y);
+  const scale = 5;
+  
+  // Compute triangle vertices using law of cosines
+  const cosA = (b*b + c*c - a*a) / (2*b*c);
+  const sinA = Math.sqrt(1 - cosA*cosA);
+  
+  const p1x = 40, p1y = 170;
+  const p2x = p1x + c * scale, p2y = 170;
+  const p3x = p1x + b * scale * cosA, p3y = p1y - b * scale * sinA;
+  
+  ctx.fillStyle = 'rgba(212,160,60,0.06)';
+  ctx.beginPath();
+  ctx.moveTo(p1x, p1y);
+  ctx.lineTo(p2x, p2y);
+  ctx.lineTo(p3x, p3y);
+  ctx.closePath();
+  ctx.fill();
+  
+  ctx.strokeStyle = 'rgba(255,255,255,0.7)';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+  
+  // Labels
+  ctx.font = '600 13px Outfit';
+  ctx.textAlign = 'center';
+  ctx.fillStyle = 'rgba(255,255,255,0.7)';
+  ctx.fillText(sides[0], (p1x + p2x) / 2, p1y + 18);
+  ctx.fillText(sides[1], (p2x + p3x) / 2 + 12, (p2y + p3y) / 2);
+  ctx.fillText(sides[2], (p1x + p3x) / 2 - 12, (p1y + p3y) / 2);
+}
+
+// ============================================================
+// HINT TOGGLE
+// ============================================================
+function toggleHint(prefix) {
+  const hint = document.getElementById(prefix + 'Hint');
+  hint.classList.toggle('visible');
+}
+
+// ============================================================
+// MODAL
+// ============================================================
+let modalCallback = null;
+
+function showModal(icon, title, text, code, callback) {
+  document.getElementById('modalIcon').textContent = icon;
+  document.getElementById('modalTitle').textContent = title;
+  document.getElementById('modalText').textContent = text;
+  document.getElementById('modalCode').textContent = code;
+  document.getElementById('modalOverlay').classList.add('visible');
+  modalCallback = callback;
+  
+  // Particles
+  burstParticles(window.innerWidth / 2, window.innerHeight / 2, '#d4a03c');
+  setTimeout(() => burstParticles(window.innerWidth / 2 - 50, window.innerHeight / 2 + 30, '#f0d078'), 200);
+  setTimeout(() => burstParticles(window.innerWidth / 2 + 50, window.innerHeight / 2 - 20, '#00e5ff'), 400);
+}
+
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('visible');
+  if (modalCallback) modalCallback();
+  modalCallback = null;
+}
+
+// ============================================================
+// FINAL SCREEN
+// ============================================================
+function showFinalScreen() {
+  showScreen('screenFinal');
+  
+  const keysContainer = document.getElementById('keysCollected');
+  keysContainer.innerHTML = state.keys.map(k => `
+    <div class="key-item">
+      <span class="ki-icon">${k.icon}</span>
+      <span class="ki-code">${k.code}</span>
+      <span class="ki-label">${k.label}</span>
+    </div>
+  `).join('');
+  
+  const finalCode = state.keyCodes.join('-');
+  document.getElementById('finalCode').textContent = finalCode;
+  document.getElementById('finalScore').textContent = state.score;
+  document.getElementById('finalMessage').textContent = 
+    `Félicitations ${state.playerName} ! Tu as rassemblé les trois clés dorées et ouvert le coffre sacré du Temple de Pythagore. Tu maîtrises le théorème et sa réciproque !`;
+  
+  // Epic particles
+  for (let i = 0; i < 5; i++) {
+    setTimeout(() => {
+      burstParticles(
+        Math.random() * window.innerWidth,
+        Math.random() * window.innerHeight / 2,
+        ['#d4a03c', '#f0d078', '#00e5ff', '#69f0ae', '#b388ff'][i]
+      );
+    }, i * 300);
+  }
+}
+
+// ============================================================
+// INIT
+// ============================================================
+initFloatingSymbols();
+document.getElementById('playerName').addEventListener('keydown', e => {
+  if (e.key === 'Enter') startGame();
+});
+</script>
 </body>
 </html>
