@@ -1866,9 +1866,6 @@ function renderCh2Question() {
   }).join('');
   
   const findLabel = q.find;
-  const knownA = q.known.a !== undefined ? q.known.a : '?';
-  const knownB = q.known.b !== undefined ? q.known.b : '?';
-  const knownC = q.known.c;
   
   area.innerHTML = `
     <div class="challenge-question">
@@ -1884,9 +1881,8 @@ function renderCh2Question() {
     </div>
   `;
   
-  const a = q.known.a || q.answer;
-  const b = q.known.b || q.answer;
-  drawQuestionTriangle('ch2Canvas', a, b, knownC, `${findLabel} = ?`);
+  // Draw with correct known/unknown labels for chapter 2
+  drawCh2Triangle('ch2Canvas', q);
   state.attempts = 0;
 }
 
@@ -2033,6 +2029,82 @@ function completeCh3() {
 // ============================================================
 // DRAWING HELPERS
 // ============================================================
+function drawCh2Triangle(canvasId, q) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width = 300 * dpr;
+  canvas.height = 220 * dpr;
+  ctx.scale(dpr, dpr);
+  ctx.clearRect(0, 0, 300, 220);
+  
+  // Actual side lengths for drawing proportions
+  const realA = q.known.a !== undefined ? q.known.a : q.answer;
+  const realB = q.known.b !== undefined ? q.known.b : q.answer;
+  const realC = q.known.c;
+  
+  const scale = 12;
+  const ox = 60, oy = 170;
+  const bx = ox + realB * scale, by = oy;
+  const cx = ox, cy = oy - realA * scale;
+  
+  // Fill
+  ctx.fillStyle = 'rgba(0,229,255,0.06)';
+  ctx.beginPath();
+  ctx.moveTo(ox, oy);
+  ctx.lineTo(bx, by);
+  ctx.lineTo(cx, cy);
+  ctx.closePath();
+  ctx.fill();
+  
+  // Stroke
+  ctx.strokeStyle = 'rgba(255,255,255,0.7)';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(ox, oy);
+  ctx.lineTo(bx, by);
+  ctx.lineTo(cx, cy);
+  ctx.closePath();
+  ctx.stroke();
+  
+  // Right angle
+  const sq = 10;
+  ctx.strokeStyle = 'rgba(255,255,255,0.3)';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.moveTo(ox + sq, oy);
+  ctx.lineTo(ox + sq, oy - sq);
+  ctx.lineTo(ox, oy - sq);
+  ctx.stroke();
+  
+  // Labels — show known values and "?" for the unknown
+  ctx.font = '600 13px Outfit';
+  ctx.textAlign = 'center';
+  
+  // Side a (vertical left)
+  if (q.known.a !== undefined) {
+    ctx.fillStyle = '#ff7043';
+    ctx.fillText('a = ' + q.known.a, ox - 25, (oy + cy) / 2);
+  } else {
+    ctx.fillStyle = '#ff7043';
+    ctx.fillText('a = ?', ox - 25, (oy + cy) / 2);
+  }
+  
+  // Side b (horizontal bottom)
+  if (q.known.b !== undefined) {
+    ctx.fillStyle = '#42a5f5';
+    ctx.fillText('b = ' + q.known.b, (ox + bx) / 2, oy + 18);
+  } else {
+    ctx.fillStyle = '#42a5f5';
+    ctx.fillText('b = ?', (ox + bx) / 2, oy + 18);
+  }
+  
+  // Hypotenuse c (always known in chapter 2)
+  ctx.fillStyle = '#ab47bc';
+  ctx.fillText('c = ' + realC, (bx + cx) / 2 + 22, (by + cy) / 2 - 8);
+}
+
 function drawQuestionTriangle(canvasId, a, b, c, unknownLabel) {
   const canvas = document.getElementById(canvasId);
   if (!canvas) return;
